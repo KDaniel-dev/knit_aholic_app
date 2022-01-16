@@ -36,6 +36,7 @@ class HomeState extends State<Home> {
       ),
       body: tabs[currentIndex],
       bottomNavigationBar: CurvedNavigationBar(
+        index: currentIndex,
         items: navBarItems,
         onTap: (index) {
           setState(() => currentIndex = index);
