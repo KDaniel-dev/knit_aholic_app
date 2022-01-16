@@ -1,3 +1,4 @@
+import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'dashboard.dart';
 import 'inventory.dart';
@@ -19,6 +20,14 @@ class HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
+    const navBarItems = [
+      Icon(Icons.person_outlined, color: Colors.white),
+      Icon(Icons.list_outlined, color: Colors.white),
+      Icon(Icons.home_outlined, color: Colors.white),
+      Icon(Icons.auto_graph_outlined, color: Colors.white),
+      Icon(Icons.bar_chart_outlined, color: Colors.white),
+    ];
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('KnitAholic',
@@ -26,30 +35,16 @@ class HomeState extends State<Home> {
         centerTitle: true,
       ),
       body: tabs[currentIndex],
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: currentIndex,
-        type: BottomNavigationBarType.fixed,
-        selectedItemColor: Colors.white,
-        unselectedItemColor: Colors.grey[300],
-        selectedIconTheme: const IconThemeData(size: 30),
-        backgroundColor: Theme.of(context).colorScheme.primary,
-        items: const [
-          BottomNavigationBarItem(
-              icon: Icon(Icons.person_outlined), label: 'Profil'),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.list_outlined), label: 'Dit garn'),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.home_outlined), label: 'Hjem'),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.auto_graph_outlined), label: 'Projekter'),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.bar_chart_outlined), label: 'Stats')
-        ],
+      bottomNavigationBar: CurvedNavigationBar(
+        items: navBarItems,
         onTap: (index) {
-          setState(() {
-            currentIndex = index;
-          });
+          setState(() => currentIndex = index);
         },
+        height: 50.0,
+        color: Theme.of(context).colorScheme.primary,
+        backgroundColor: Colors.white,
+        buttonBackgroundColor: Theme.of(context).colorScheme.primary,
+        animationDuration: const Duration(milliseconds: 300),
       ),
     );
   }
