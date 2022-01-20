@@ -1,10 +1,10 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
-import 'dashboard.dart';
-import 'inventory.dart';
-import 'profile.dart';
-import 'projects.dart';
-import 'stats.dart';
+import 'tabs/dashboard.dart';
+import 'tabs/inventory.dart';
+import 'tabs/profile.dart';
+import 'tabs/projects.dart';
+import 'tabs/stats.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);

@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'home.dart';
+import '../theme/theme_model.dart';
+import '../theme/themes.dart';
 
 void main() => runApp(MyApp());
 
@@ -8,8 +11,17 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-        theme: ThemeData(primarySwatch: Colors.teal, fontFamily: 'OpenSans'),
-        home: const Home());
+    return ChangeNotifierProvider(
+      create: (_) => ThemeModel(),
+      child: Consumer<ThemeModel>(
+          builder: (context, ThemeModel themeNotifier, child) {
+        return MaterialApp(
+            theme: ThemeData(
+                primarySwatch:
+                    getColorValue(Themes.values[themeNotifier.theme]),
+                fontFamily: 'OpenSans'),
+            home: const Home());
+      }),
+    );
   }
 }
