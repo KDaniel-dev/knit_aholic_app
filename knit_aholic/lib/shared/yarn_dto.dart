@@ -2,7 +2,7 @@ import 'package:knit_aholic/Models/yarn_status.dart';
 
 class YarnDTO {
   final int id;
-  final int typeId;
+  final String type;
   final int colorId;
   final YarnStatus status;
   final DateTime dateAdded;
@@ -10,7 +10,7 @@ class YarnDTO {
 
   YarnDTO(
       {required this.id,
-      required this.typeId,
+      required this.type,
       required this.colorId,
       required this.status,
       required this.dateAdded,
