@@ -1,0 +1,1 @@
+enum ProjectStatus { inProgress, compledted }

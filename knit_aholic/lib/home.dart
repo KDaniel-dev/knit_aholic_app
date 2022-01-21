@@ -31,7 +31,8 @@ class HomeState extends State<Home> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('KnitAholic',
-            style: TextStyle(fontFamily: 'Sacramento', fontSize: 30)),
+            style: TextStyle(
+                fontFamily: 'Sacramento', fontSize: 30, color: Colors.white)),
         centerTitle: true,
       ),
       body: tabs[currentIndex],

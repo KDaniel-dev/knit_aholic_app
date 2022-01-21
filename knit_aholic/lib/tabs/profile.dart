@@ -1,6 +1,7 @@
 // ignore_for_file: deprecated_member_use
 
 import 'package:flutter/material.dart';
+import 'package:knit_aholic/components/tab_title_component.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../theme/theme_model.dart';
 import 'package:provider/provider.dart';
@@ -45,17 +46,7 @@ class ProfileState extends State<Profile> {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
-          Container(
-            alignment: Alignment.center,
-            child: Text(
-              "Personlig\ntilpasning",
-              style: TextStyle(
-                fontSize: 50,
-                color: Theme.of(context).colorScheme.primary,
-              ),
-            ),
-            height: 200,
-          ),
+          const TabTitle(title: 'Personlig\ntilpasning'),
           Container(
             margin:
                 const EdgeInsets.symmetric(horizontal: 20.0, vertical: 30.0),
