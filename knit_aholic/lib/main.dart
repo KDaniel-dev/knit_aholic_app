@@ -19,7 +19,8 @@ class MyApp extends StatelessWidget {
             theme: ThemeData(
                 primarySwatch:
                     getColorValue(Themes.values[themeNotifier.theme]),
-                fontFamily: 'OpenSans'),
+                fontFamily: 'OpenSans',
+                dividerColor: Colors.transparent),
             home: const Home());
       }),
     );

@@ -36,7 +36,7 @@ class Yarn {
       required this.colorId,
       required this.status,
       required this.dateAdded,
-      required this.dateDeleted,
+      this.dateDeleted,
       this.projectId});
 
   Yarn copy(
