@@ -4,7 +4,10 @@ import 'home.dart';
 import '../theme/theme_model.dart';
 import '../theme/themes.dart';
 
-void main() => runApp(MyApp());
+void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);

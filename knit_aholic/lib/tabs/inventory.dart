@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:knit_aholic/Models/yarn.dart';
-import 'package:knit_aholic/Models/yarn_type.dart';
-import 'package:knit_aholic/Models/yarn_status.dart';
+import 'package:knit_aholic/components/add_yarn_type_component.dart';
 import 'package:knit_aholic/components/tab_title_component.dart';
 import 'package:knit_aholic/components/yarn_type_component.dart';
 import 'package:knit_aholic/db/yarn_service.dart';
+import 'package:knit_aholic/db/yarn_type_service.dart';
+import 'package:knit_aholic/Shared/yarn_type_dto.dart';
+
+import '../Models/yarn_type.dart';
 
 class Inventory extends StatefulWidget {
   const Inventory({Key? key}) : super(key: key);
@@ -14,84 +17,32 @@ class Inventory extends StatefulWidget {
 }
 
 class InventoryState extends State<Inventory> {
-  late List<Yarn> yarn;
-
-  List<Yarn> test = [
-    Yarn(
-        type: 'Øko',
-        colorId: 1,
-        status: YarnStatus.available,
-        dateAdded: DateTime.now()),
-    Yarn(
-        type: 'Alpaca',
-        colorId: 1,
-        status: YarnStatus.available,
-        dateAdded: DateTime.now()),
-    Yarn(
-        type: 'Silke',
-        colorId: 2,
-        status: YarnStatus.available,
-        dateAdded: DateTime.now()),
-    Yarn(
-        type: 'Bomuld',
-        colorId: 1,
-        status: YarnStatus.available,
-        dateAdded: DateTime.now()),
-    Yarn(
-        type: 'Blødt',
-        colorId: 4,
-        status: YarnStatus.available,
-        dateAdded: DateTime.now()),
-    Yarn(
-        type: 'Hårdt',
-        colorId: 2,
-        status: YarnStatus.available,
-        dateAdded: DateTime.now()),
-    Yarn(
-        type: 'Sejt',
-        colorId: 2,
-        status: YarnStatus.available,
-        dateAdded: DateTime.now()),
-    Yarn(
-        type: 'Grimt',
-        colorId: 2,
-        status: YarnStatus.available,
-        dateAdded: DateTime.now()),
-  ];
+  final List<int> colors = [300, 400];
+  List<YarnTypeDTO> yarnTypeCollections = [];
 
   @override
   void initState() {
     super.initState();
-
-    try {
-      // loadYarn();
-    } catch (e) {
-      yarn = [];
-      print(e);
-    }
+    loadYarn();
   }
 
   @override
   Widget build(BuildContext context) {
-    final List<YarnType> yarnTypes = toYarnTypes();
-    final List<int> colors = [300, 400];
-    // https://api.flutter.dev/flutter/widgets/ListView-class.html
     return ListView.separated(
       padding: const EdgeInsets.all(12),
-      itemCount: yarnTypes.length + 1,
+      itemCount: yarnTypeCollections.length + 2,
       itemBuilder: (context, index) {
         if (index == 0) {
           return const TabTitle(title: "Dit garn");
+        } else if (index == 1) {
+          return GestureDetector(
+              onTap: () => _displayAddYarnTypeDialog(context),
+              child: const AddYarnTypeButton());
         } else {
-          return Container(
-            decoration: BoxDecoration(
-              borderRadius: const BorderRadius.all(Radius.circular(20)),
-              color: (Theme.of(context).colorScheme.primary
-                  as MaterialColor)[colors[index % 2]],
-            ),
-            child: YarnTypeContainer(
-              yarnType: yarnTypes[index - 1],
-            ),
+          return YarnTypeContainer(
+            yarnType: yarnTypeCollections[index - 2],
+            color: (Theme.of(context).colorScheme.primary
+                as MaterialColor)[colors[index % 2]] as Color,
           );
         }
       },
@@ -100,20 +51,67 @@ class InventoryState extends State<Inventory> {
   }
 
   void loadYarn() async {
-    yarn = await YarnService.readAll();
+    List<YarnTypeDTO> result = [];
+    try {
+      List<Yarn> yarn = await YarnService.readAll();
+      List<YarnType> yarnTypes = await YarnTypeService.readAll();
+      for (var yt in yarnTypes) {
+        var yarnOfType = yarn.where((e) => e.typeId == yt.id);
+        result.add(YarnTypeDTO(type: yt, yarn: yarnOfType.toList()));
+      }
+    } catch (e) {
+      print(e);
+    } finally {
+      setState(() => yarnTypeCollections = result);
+    }
   }
 
-  List<YarnType> toYarnTypes() {
-    Map<String, List<Yarn>> dictionary = {};
-    for (var y in test) {
-      if (dictionary.containsKey(y.type)) {
-        dictionary[y.type]!.add(y);
-      } else {
-        dictionary[y.type] = [y];
-      }
-    }
-    return dictionary.entries.map((element) {
-      return YarnType(type: element.key, yarn: element.value);
-    }).toList();
+  Future<void> _displayAddYarnTypeDialog(BuildContext context) async {
+    String valueText = '';
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text('Tilføj ny garn type'),
+            content: TextField(
+              autofocus: true,
+              onChanged: (value) {
+                setState(() {
+                  valueText = value;
+                  debugPrint(valueText);
+                });
+              },
+              decoration: const InputDecoration(hintText: "Indtast garn type"),
+            ),
+            actions: <Widget>[
+              FlatButton(
+                color: Colors.grey,
+                textColor: Colors.white,
+                child: const Text('Fortryd'),
+                onPressed: () {
+                  setState(() {
+                    Navigator.pop(context);
+                  });
+                },
+              ),
+              FlatButton(
+                color: Theme.of(context).colorScheme.primary,
+                textColor: Colors.white,
+                child: const Text('Ok'),
+                onPressed: () {
+                  setState(() {
+                    addYarnType(valueText);
+                    Navigator.pop(context);
+                  });
+                },
+              ),
+            ],
+          );
+        });
+  }
+
+  void addYarnType(String typeName) async {
+    var res = await YarnTypeService.create(YarnType(typeName: typeName));
+    loadYarn();
   }
 }

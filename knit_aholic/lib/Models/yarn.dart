@@ -5,7 +5,7 @@ final String tableYarn = 'yarn';
 class YarnFields {
   static final List<String> values = [
     id,
-    type,
+    typeId,
     colorId,
     status,
     dateAdded,
@@ -13,7 +13,7 @@ class YarnFields {
     projectId
   ];
   static final String id = '_id';
-  static final String type = 'type';
+  static final String typeId = 'type';
   static final String colorId = 'colorId';
   static final String status = 'status';
   static final String dateAdded = 'dateAdded';
@@ -23,7 +23,7 @@ class YarnFields {
 
 class Yarn {
   final int? id;
-  final String type;
+  final int typeId;
   final int colorId;
   final YarnStatus status;
   final DateTime dateAdded;
@@ -32,7 +32,7 @@ class Yarn {
 
   Yarn(
       {this.id,
-      required this.type,
+      required this.typeId,
       required this.colorId,
       required this.status,
       required this.dateAdded,
@@ -41,7 +41,7 @@ class Yarn {
 
   Yarn copy(
           {int? id,
-          String? type,
+          int? typeId,
           int? colorId,
           YarnStatus? status,
           DateTime? dateAdded,
@@ -49,7 +49,7 @@ class Yarn {
           int? projectId}) =>
       Yarn(
           id: id ?? this.id,
-          type: type ?? this.type,
+          typeId: typeId ?? this.typeId,
           colorId: colorId ?? this.colorId,
           status: status ?? this.status,
           dateAdded: dateAdded ?? this.dateAdded,
@@ -58,7 +58,7 @@ class Yarn {
 
   Map<String, Object?> toJson() => {
         YarnFields.id: id,
-        YarnFields.type: type,
+        YarnFields.typeId: typeId,
         YarnFields.colorId: colorId,
         YarnFields.status: YarnStatus.values.indexOf(status),
         YarnFields.dateAdded: dateAdded.toIso8601String(),
@@ -68,7 +68,7 @@ class Yarn {
 
   static Yarn fromJson(Map<String, Object?> json) => Yarn(
       id: json[YarnFields.id] as int?,
-      type: json[YarnFields.type] as String,
+      typeId: json[YarnFields.typeId] as int,
       colorId: json[YarnFields.colorId] as int,
       status: YarnStatus.values[[YarnFields.status] as int],
       dateAdded: DateTime.parse(json[YarnFields.dateAdded] as String),

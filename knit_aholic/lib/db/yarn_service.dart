@@ -33,22 +33,22 @@ class YarnService {
     if (maps.isNotEmpty) {
       return maps.map((e) => Yarn.fromJson(e)).toList();
     } else {
-      throw Exception('Yarn not found');
+      return [];
     }
   }
 
-  static Future<List<Yarn>> readFromType(String type) async {
+  static Future<List<Yarn>> readFromType(int typeId) async {
     final Database db = await KnitAholicDatabase.instance.database;
 
     final maps = await db.query(tableYarn,
         columns: YarnFields.values,
-        where: '${YarnFields.type} = ?',
-        whereArgs: [type]);
+        where: '${YarnFields.typeId} = ?',
+        whereArgs: [typeId]);
 
     if (maps.isNotEmpty) {
       return maps.map((e) => Yarn.fromJson(e)).toList();
     } else {
-      throw Exception('Type $type not found');
+      throw Exception('Type $typeId not found');
     }
   }
 
